@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+transformers
+torch
+python-dotenv
+accelerate
+llama-cpp-python
+aiosqlite
+databases
