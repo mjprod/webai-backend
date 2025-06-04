@@ -6,8 +6,13 @@ from databases import Database
 import sqlalchemy
 import json
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy import func
 from pydantic import BaseModel, Field
+import torchaudio as ta
+from chatterbox.tts import ChatterboxTTS
+import uuid
 
 app = FastAPI(title="WebAI Backend with History (SQLite) 🚀", version="1.0")
 
@@ -40,6 +45,14 @@ chats = sqlalchemy.Table(
 
 engine = sqlalchemy.create_engine(DATABASE_URL)
 metadata.create_all(engine)
+
+# --- Audio setup ---
+AUDIO_OUTPUT_DIR = "audio_outputs"
+os.makedirs(AUDIO_OUTPUT_DIR, exist_ok=True)
+app.mount("/audio", StaticFiles(directory=AUDIO_OUTPUT_DIR), name="audio")
+
+# --- TTS Model (load once!) ---
+model = ChatterboxTTS.from_pretrained(device="cpu")  # or "cuda" if GPU
 
 # Updated: Require conversation_id
 class Prompt(BaseModel):
@@ -139,26 +152,36 @@ async def generate_voice_response(prompt: Prompt):
 
         response_text = response['choices'][0]['text'].strip()
 
-        # Save agent response with conversation_id
-        await database.execute(chats.insert().values(
-            conversation_id=prompt.conversation_id,
-            role="agent voice",
-            message=response_text
-        ))
+       # --- Generate audio with Chatterbox ---
+        audio_filename = f"{uuid.uuid4()}.wav"
+        audio_path = os.path.join(AUDIO_OUTPUT_DIR, audio_filename)
+        wav = model.generate(response_text)
+        if wav.dim() == 1:
+            wav = wav.unsqueeze(0)
+        ta.save(audio_path, wav, model.sr)
+
+        # --- Save audio filename in DB ---
+        with database.begin() as conn:
+            conn.execute(chats.insert().values(
+                conversation_id=prompt.conversation_id,
+                role="agent voice",
+                message=audio_filename
+            ))
 
         return {
             "response": response_text,
-            
+            "audio_url": f"/audio/{audio_filename}",
             "history": [
-            {
-                "id": row["id"],
-                "role": row["role"],
-                "message": row["message"],
-                "timestamp": row["timestamp"].isoformat() if row["timestamp"] else None
-            }
+                {
+                    "id": row["id"],
+                    "role": row["role"],
+                    "message": row["message"],
+                    "timestamp": row["timestamp"].isoformat() if row["timestamp"] else None
+                }
                 for row in rows
             ]
         }
+
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
