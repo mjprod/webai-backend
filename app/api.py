@@ -21,7 +21,7 @@ app.add_middleware(
 )
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_PATH = os.path.join(BASE_DIR, "models", "Qwen3-4B-Q4_K_M.gguf")
+MODEL_PATH = os.path.join(BASE_DIR, "models", "gemma-3-12b-it-Q4_K_S.gguf")
 
 llm = Llama(model_path=MODEL_PATH, n_ctx=4096, n_gpu_layers=-1)
 
