@@ -138,7 +138,6 @@ async def generate_response(prompt: Prompt, user_role: str, agent_role: str, age
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# Agora, os endpoints só chamam essa função, mudando o nome/role
 @app.post("/generate_voice")
 async def generate_voice_response(prompt: Prompt):
     agent = AGENTS.get(prompt.agent_id, AGENTS["max"])
