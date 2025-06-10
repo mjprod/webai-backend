@@ -37,6 +37,7 @@ metadata = sqlalchemy.MetaData()
 
 openai.api_key = ""
 
+
 # --- DB TABLES ---
 
 chats = sqlalchemy.Table(
@@ -127,9 +128,8 @@ async def extract_name_with_validator(user_input: str, entity_type: str = "perso
         f"{entity_type.capitalize()}:"
     )
 
-    # 1. Chama o modelo do OpenAI (turbo é rápido e barato)
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",  # ou "gpt-4" se quiser mais preciso
+        model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "You extract structured data from user messages. Respond with only the data, no explanation. if don't find the data, return None "},
             {"role": "user", "content": prompt},
@@ -154,12 +154,13 @@ async def generate_response(prompt: Prompt, user_role: str, agent_role: str, age
     rows = await database.fetch_all(chats.select().where(chats.c.conversation_id == prompt.conversation_id))
     knowledge_data = await get_knowledge(prompt.conversation_id)
 
-    await database.execute(chats.insert().values(
-        conversation_id=prompt.conversation_id,
-        role=user_role,
-        message=prompt.user_input,
-        agent_id=prompt.agent_id
-    ))
+    if prompt.user_input.strip():
+        await database.execute(chats.insert().values(
+            conversation_id=prompt.conversation_id,
+            role=user_role,
+            message=prompt.user_input,
+            agent_id=prompt.agent_id
+        ))
 
     # --- Atualização NATURAL de nome/empresa (antes de tudo) ---
     def extract_name_update(message):
