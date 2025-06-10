@@ -27,6 +27,7 @@ app.add_middleware(
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(BASE_DIR, "models", "Phi-3-mini-4k-instruct-q4.gguf")
 
+
 llm = Llama(model_path=MODEL_PATH, n_ctx=4096, n_gpu_layers=-1)
 DATABASE_URL = "sqlite:///./chat_history.db"
 database = Database(DATABASE_URL)
@@ -63,6 +64,7 @@ engine = sqlalchemy.create_engine(DATABASE_URL)
 metadata.create_all(engine)
 
 # --- APP EVENTS ---
+
 name_retry_phrases = [
     "I didn't catch your name clearly. Could you please tell me your name again?",
     "Sorry, I missed your name. Can you type it again for me?",

@@ -90,6 +90,7 @@ AGENTS = {
             - Don't use long, complex sentences. Keep responses concise and to the point.
             
 <<<<<<< HEAD
+<<<<<<< HEAD
             Sample dialogues:
             AI: So, Thanks for connecting! How can I assist you today?
             Prospect: I’m looking for help with my business.
@@ -100,6 +101,8 @@ AGENTS = {
             AI: Great, I can help you with that! What kind of application are you looking to build?
             Prospect: I need a web application for my business.
             AI: Awesome, I can help you with that! What features are you looking for in this web application?
+=======
+>>>>>>> f84a37ded1c5e0aa0f9ff9756b9dc2b20b2356e3
 =======
 >>>>>>> f84a37ded1c5e0aa0f9ff9756b9dc2b20b2356e3
         """
