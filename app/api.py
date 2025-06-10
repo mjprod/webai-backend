@@ -10,7 +10,10 @@ from sqlalchemy import func
 from .data.agents import AGENTS
 import re
 import openai
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 # --- CONFIG ---
 
@@ -34,9 +37,9 @@ database = Database(DATABASE_URL)
 metadata = sqlalchemy.MetaData()
 
 # llm_validator = Llama(model_path=MODEL_VALIDATOR_PATH, n_ctx=4096, n_gpu_layers=-1)
+openai_api_key = os.getenv("OPENAI_API_KEY")
 
-openai.api_key = ""
-
+openai.api_key = openai_api_key
 
 # --- DB TABLES ---
 
