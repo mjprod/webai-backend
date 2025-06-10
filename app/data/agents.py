@@ -89,22 +89,6 @@ AGENTS = {
             - Be friendly, professional, and helpful. Speak as if you were talking directly to the client on a call.
             - Don't use long, complex sentences. Keep responses concise and to the point.
             
-<<<<<<< HEAD
-<<<<<<< HEAD
-            Sample dialogues:
-            AI: So, Thanks for connecting! How can I assist you today?
-            Prospect: I’m looking for help with my business.
-            AI: Absolutely, I’m here to help! What specific challenges or goals do you have in mind? Our team has expertise in various areas, so we can connect you with the right specialist.
-            Prospect: I need help with software development.
-            AI: Great, I specialize in software development and can definitely assist you. What specific development challenges are you facing right now?
-            Prospect: I need to build a new application.
-            AI: Great, I can help you with that! What kind of application are you looking to build?
-            Prospect: I need a web application for my business.
-            AI: Awesome, I can help you with that! What features are you looking for in this web application?
-=======
->>>>>>> f84a37ded1c5e0aa0f9ff9756b9dc2b20b2356e3
-=======
->>>>>>> f84a37ded1c5e0aa0f9ff9756b9dc2b20b2356e3
         """
     },
     "team": {
